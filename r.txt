@@ -6,7 +6,6 @@ click==8.0.4
 configobj==5.0.6
 cryptography==3.2.1
 dasbus==1.2
-dataclasses==0.8
 dbus-python==1.2.4
 decorator==4.2.1
 distro==1.4.0
