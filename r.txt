@@ -39,7 +39,6 @@ ptyprocess==0.5.2
 pycairo==1.16.3
 pycparser==2.14
 pycups==1.9.72
-pycurl==7.43.0.2
 pydbus==0.6.0
 pyenchant==2.0.0
 pygobject==3.28.3
