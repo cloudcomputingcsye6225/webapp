@@ -21,7 +21,6 @@ jsonpatch==1.21
 jsonpointer==1.10
 jsonschema==2.6.0
 langtable==0.0.51
-libcomps==0.1.18
 MarkupSafe==2.0.1
 mysqlclient==2.1.1
 netifaces==0.10.6
