@@ -24,7 +24,6 @@ langtable==0.0.51
 MarkupSafe==2.0.1
 mysqlclient==2.1.1
 netifaces==0.10.6
-nftables==0.1
 ntplib==0.3.3
 oauthlib==2.1.0
 ordered-set==2.0.2
