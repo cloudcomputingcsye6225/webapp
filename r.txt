@@ -40,7 +40,6 @@ pycairo==1.16.3
 pycparser==2.14
 pycups==1.9.72
 pydbus==0.6.0
-pyenchant==2.0.0
 pygobject==3.28.3
 PyJWT==1.6.1
 pykickstart==3.16.16
