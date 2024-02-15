@@ -1,4 +1,4 @@
-name: Web App application auto checks
+name: Web App application testing thing
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
       -main
 
 jobs:
-  application-build:
+  application-build: test build
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -42,6 +42,7 @@ jobs:
           pwd
           pip install --upgrade pip
           pip install -r r.txt --no-cache
+          pip install pytest
 
       - name: Run App
         run: |

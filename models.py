@@ -19,8 +19,7 @@ class User(base):
         account_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
         
         @staticmethod
-        def check_if_username_exists(username):
-            print('in static method')
+        def global_check_if_username_exists(username):
             session = Session()
             user = session.query(User).filter(User.username == username).first()
             session.close()
@@ -64,7 +63,7 @@ class User(base):
             return (self.username == user_data['username'] and
                     self.first_name == user_data['first_name'] and
                     self.last_name == user_data['last_name'] and
-                    self.verify_password(password))
+                    self.verify_password(user_data['password']))
               
         @staticmethod
         def create_new_user(data):

@@ -5,21 +5,23 @@ import uuid
 import requests
 from datetime import datetime
 
-from database_config import config
 from utilities import hash_password, verify
-from database_config import engine, Session
+from database_config import engine, Session, reconnect
 from models import User
 from environment_config import app, http_methods, send_json_with_data, authenticate_user
 from environment_config import response_400, response_503, response_405, response_200_0, response_404, response_401, response_204
 
-try:
+def bootstrap():
+    try:
         base.metadata.create_all(engine)
         session = Session()
         session.query(User).first()
         session.close()
-except Exception as e:
+    except Exception as e:
         if 'no such table' in str(e):
             base.metadata.create_all(engine)
+
+bootstrap()
 
 @app.route("/healthz", methods = http_methods)
 def health_check():
@@ -28,6 +30,8 @@ def health_check():
         if request.args or request.get_data(as_text = True):
                 return response_400
         try:
+                engine, Session = reconnect()
+                bootstrap()
                 engine.connect()
                 return response_200_0
         except Exception as e:
@@ -49,9 +53,11 @@ def create_user():
                 if(set(data.keys()) != list_of_attributes):
                     raise ValueError
                 
-                if re.match(pattern, data['username']) in (None, False) or User.check_if_username_exists(data['username']):
+                if re.match(pattern, data['username']) in (None, False) or User.global_check_if_username_exists(data['username']):
                     raise ValueError
-                    
+                
+                if len(data['password']) < 1:
+                    raise ValueError
                 User.create_new_user(data)
                 
                 del data['password'] 
@@ -96,13 +102,18 @@ def get_or_put_user():
                 if not user:
                     return response_401
 
-                list_of_attributes = {'first_name', 'last_name', 'username', 'password'}
+                list_of_attributes = {'first_name', 'last_name', 'password'}
                 pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
                     
                 try:
                     data = json.loads(request.data)
-                    
+
                     if set(data.keys()) != list_of_attributes:
+                        raise ValueError
+
+                    data['username'] = user.username
+                    
+                    if len(data['password']) < 1:
                         raise ValueError
 
                     if re.match(pattern, data['username']) in (None, False):
@@ -119,7 +130,6 @@ def get_or_put_user():
                     else:
                         raise ValueError
                 except Exception as e:
-                    print(e)
                     return response_400
 
         else:

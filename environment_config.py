@@ -2,7 +2,7 @@ from flask import Flask, make_response, jsonify
 from database_config import Session
 from models import User
 
-app = Flask("__main__")
+app = Flask(__name__)
 
 http_methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT']
 
@@ -57,9 +57,11 @@ def send_json_with_data(data):
       return response
       
 def authenticate_user(request_object):
-    with app.app_context():
-    
+    with app.app_context():    
       if 'basic' in request_object.headers.get('Authorization').lower():
+          if not request_object.authorization:
+              return None
+
           auth = request_object.authorization
           
           if('username' not in auth.keys() or 'password' not in auth.keys()):
@@ -69,8 +71,11 @@ def authenticate_user(request_object):
               user = session.query(User).filter(User.username == auth['username']).first()
               session.close()
               
-              if user.verify_password(auth['password']):
-                  return user
+              if user:
+                  if user.verify_password(auth['password']):
+                      return user
+                  else:
+                      return None
               else:
                   return None
       else:
