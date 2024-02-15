@@ -47,4 +47,4 @@ jobs:
 
       - name: Run App
         run: |
-          python3 test_app.py
+          sudo nohup python3 test_app.py > log.txt 2>&1 &
