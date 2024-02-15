@@ -1,3 +1,4 @@
+
 from flask import jsonify, request, make_response
 import json
 import re
@@ -64,6 +65,7 @@ def create_user():
 
                 return response_200_0, 201
         except Exception as e:
+
                 return response_400
 
 @app.route('/v1/user/self', methods = http_methods)
