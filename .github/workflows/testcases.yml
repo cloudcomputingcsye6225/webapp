@@ -1,4 +1,4 @@
-name: Web App application auto checks
+name: Web App application testing thing
 
 on:
   push:
@@ -42,7 +42,9 @@ jobs:
           pwd
           pip install --upgrade pip
           pip install -r requirements.txt --no-cache
+          pip install pytest
+          pip install requests
 
       - name: Run App
         run: |
-          sudo nohup python3 api.py > log.txt 2>&1 &
+          sudo nohup python3 test_app.py > log.txt 2>&1 &
