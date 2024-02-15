@@ -46,4 +46,4 @@ jobs:
 
       - name: Run App
         run: |
-          sudo nohup python3 test.py
+          python3 test_app.py
