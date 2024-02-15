@@ -41,7 +41,7 @@ jobs:
         run: |
           pwd
           pip install --upgrade pip
-          pip install -r r.txt --no-cache
+          pip install -r requirements.txt --no-cache
           pip install pytest
 
       - name: Run App
