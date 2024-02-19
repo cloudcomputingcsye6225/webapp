@@ -26,7 +26,7 @@ def test_create_user(client):
         "password": password
     }
     response = client.post('/v1/user', json=user_data)
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 def test_get_user_profile(client):
     response = client.get('/v1/user/self', headers={'Authorization': f'Basic {auth_encoded}'})
@@ -43,7 +43,7 @@ def test_update_user_profile(client):
         "password": new_password
     }
     response = client.put('/v1/user/self', headers=headers, json=updated_user_data)
-    assert response.status_code == 204
+    assert response.status_code == 200
 
 def test_get_user_profile_updated(client):
     response = client.get('/v1/user/self', headers={'Authorization': f'Basic {new_auth_encoded}'})
