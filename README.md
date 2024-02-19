@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a web application built with Python using the Flask framework. It provides RESTful API endpoints for managing users in a database.
+his is a web application built with Python using the Flask framework. It provides RESTful API endpoints for managing users in a database.
 
 ## Installation
 
