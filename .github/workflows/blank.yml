@@ -40,4 +40,4 @@ jobs:
 
       - name: Run App
         run: |
-          sudo nohup python3 api.py > log.txt 2>&1 &
+          python3 api.py &
