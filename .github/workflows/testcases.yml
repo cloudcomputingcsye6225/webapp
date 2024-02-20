@@ -4,6 +4,7 @@ on:
   pull_request:
     branches: 
       -main
+      -assignment_*
   workflow_dispatch:
     inputs:
       environment:
