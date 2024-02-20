@@ -1,10 +1,14 @@
 name: Web App application testing thing
 
 on:
+  push:
+    branches:
+      - main
+      - assignment_*
   pull_request:
     branches: 
-      -main
-      -assignment_*
+      - main
+      - assignment_*
   workflow_dispatch:
     inputs:
       environment:
