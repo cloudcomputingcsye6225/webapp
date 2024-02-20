@@ -1,11 +1,6 @@
 name: Web App application testing thing
 
 on:
-  push:
-    branches: 
-      - main
-      - test_branch
-      - 'assignment_*'
   pull_request:
     branches: 
       -main
