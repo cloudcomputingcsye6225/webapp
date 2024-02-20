@@ -1,10 +1,14 @@
 name: Web App application auto checks
 
 on:
+  push:
+    branches:
+      - main
+      - assignemnt_*
   pull_request:
     branches: 
-      -main
-      -assignment_*
+      - main
+      - assignment_*
   workflow_dispatch:
     inputs:
       environment:
