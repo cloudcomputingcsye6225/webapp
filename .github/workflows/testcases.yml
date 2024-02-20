@@ -42,4 +42,4 @@ jobs:
 
       - name: Run App
         run: |
-          sudo python3 test_app.py
+          python3 test_app.py
