@@ -1,11 +1,6 @@
 name: Web App application auto checks
 
 on:
-  push:
-    branches: 
-      - main
-      - test_branch
-      - 'assignment_*'
   pull_request:
     branches: 
       -main
