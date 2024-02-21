@@ -48,6 +48,16 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt --no-cache
 
+      - name: Set environment variables
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+        run: echo "Setting up environment variables"
+
       - name: Run App
         run: |
           python3 api.py &
