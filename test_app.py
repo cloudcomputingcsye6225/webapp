@@ -18,6 +18,49 @@ def client():
     with app.test_client() as client:
         yield client
 
+def test_check_health(client):
+    headers = {
+            'Content-Type': 'application/json'
+    }
+    
+    response = client.get('/healthz', headers = headers)
+    assert response.status_code in [200, 503]
+
+    response = client.post('/healthz', headers = headers)
+    assert response.status_code == 405
+
+    response = client.put('/healthz', headers = headers)
+    assert response.status_code == 405
+    
+    response = client.delete('/healthz', headers = headers)
+    assert response.status_code == 405
+
+    response = client.patch('/healthz', headers = headers)
+    assert response.status_code == 405
+
+    response = client.head('/healthz', headers = headers)
+    assert response.status_code == 405
+
+    response = client.options('/healthz', headers = headers)
+    assert response.status_code == 405
+
+    response = client.get('/healthzsd', headers = headers)
+    assert response.status_code == 404
+
+    response = client.get('/healthz?user=123', headers = headers)
+    assert response.status_code == 400
+
+    response = client.get('/healthz', headers = headers, json = {})
+    assert response.status_code == 400
+
+    response = client.get('/healthz', headers = headers)
+    assert response.status_code in [200, 503]
+
+    assert response.headers['Content-Type'] == 'application/json'
+    assert response.headers['Content-Length'] == '0'
+    assert response.headers['Pragma'] == 'no-cache'
+    assert response.headers['Cache-Control'] == 'no-cache, no-store, must-revalidate'
+
 def test_create_user(client):
     user_data = {
         "first_name": first_name,

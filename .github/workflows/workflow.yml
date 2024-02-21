@@ -1,10 +1,10 @@
-name: Web App application auto checks
+name: Web App Application Production Workflow
 
 on:
   pull_request:
     branches: 
       -main
-      -assignment_*
+
   workflow_dispatch:
     inputs:
       environment:
@@ -36,11 +36,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.6.8'
+
+      - name: Setup all build dependencies
+        run: |
+          chmod +x update_libraries_ubuntu.sh
+          ./update_libraries_ubuntu.sh
 
       - name: Install dependencies
         run: |
-          pwd
           pip install --upgrade pip
           pip install -r requirements.txt --no-cache
 
