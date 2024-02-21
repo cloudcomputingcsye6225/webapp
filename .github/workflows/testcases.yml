@@ -44,7 +44,7 @@ jobs:
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
         run: |
           chmod +x create_database_ubuntu.sh
-          ./create_database_ubuntu.sh
+          sudo ./create_database_ubuntu.sh
 
       - name: Run Test App
         env:
