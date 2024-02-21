@@ -44,16 +44,18 @@ jobs:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
         run: |
-          chmod +x create_database_ubuntu.sh
-          sudo ./create_database_ubuntu.sh
+          sudo systemctl start mysql
+          sudo mysql -u root -proot -e "CREATE DATABASE mydb;"
+          #chmod +x create_database_ubuntu.sh
+          #sudo ./create_database_ubuntu.sh
 
       - name: Run Test App
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_DATABASE: mydb
+          MYSQL_HOST: localhost
+          MYSQL_PORT: 3306
         run: |
           pytest
