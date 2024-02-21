@@ -1,0 +1,11 @@
+# Start MySQL service
+sudo systemctl start mysqld
+
+# Enable MySQL service to start on boot
+sudo systemctl enable mysqld
+
+# Create MySQL database and user
+sudo mysql -e "CREATE DATABASE $MYSQL_DATABASE;"
+sudo mysql -e "CREATE USER '$MYSQL_USER'@'$MYSQL_HOST' IDENTIFIED BY '$MYSQL_PASSWORD';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'$MYSQL_HOST';"
+sudo mysql -e "FLUSH PRIVILEGES;"

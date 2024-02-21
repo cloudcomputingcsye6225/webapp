@@ -1,28 +1,25 @@
-#test
 from flask import jsonify, request, make_response
 import json
 import re
 import uuid
 import requests
+import logging
 from datetime import datetime
 
 from utilities import hash_password, verify
 from database_config import engine, Session, reconnect
-from models import User
+from models import User, base
 from environment_config import app, http_methods, send_json_with_data, authenticate_user
 from environment_config import response_400, response_503, response_405, response_200_0, response_404, response_401, response_204
 
-def bootstrap():
-    try:
+try:
+    base.metadata.create_all(engine)
+    session = Session()
+    session.query(User).first()
+    session.close()
+except Exception as e:
+    if 'no such table' in str(e):
         base.metadata.create_all(engine)
-        session = Session()
-        session.query(User).first()
-        session.close()
-    except Exception as e:
-        if 'no such table' in str(e):
-            base.metadata.create_all(engine)
-
-bootstrap()
 
 @app.route("/healthz", methods = http_methods)
 def health_check():
@@ -32,7 +29,6 @@ def health_check():
                 return response_400
         try:
                 engine, Session = reconnect()
-                bootstrap()
                 engine.connect()
                 return response_200_0
         except Exception as e:
@@ -65,7 +61,6 @@ def create_user():
 
                 return response_200_0, 201
         except Exception as e:
-
                 return response_400
 
 @app.route('/v1/user/self', methods = http_methods)
