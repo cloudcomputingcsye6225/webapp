@@ -3,7 +3,7 @@ name: Web App application Testing Workflow
 on:
   pull_request:
     branches: 
-      -main
+      - main
 
   workflow_dispatch:
     inputs:

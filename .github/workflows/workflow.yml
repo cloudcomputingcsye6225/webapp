@@ -3,7 +3,7 @@ name: Web App Application Production Workflow
 on:
   pull_request:
     branches: 
-      -main
+      - main
 
   workflow_dispatch:
     inputs:
