@@ -24,15 +24,16 @@ jobs:
         with:
           python-version: '3.6.8'
 
+      - name: Setup all build dependencies
+        run: |
+          chmod +x update_libraries_ubuntu.sh
+          ./update_libraries_ubuntu.sh
+
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt --no-cache
 
-      - name: Check if you can login
-        run: |
-          sudo systemctl start mysql
-          sudo mysql -u root -proot -e "SELECT 1;"
       - name: Setup Database
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
@@ -42,8 +43,12 @@ jobs:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
         run: |
-          chmod +x create_database_ubuntu.sh
-          sudo ./create_database_ubuntu.sh
+          sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE DATABASE ${MYSQL_DATABASE};"
+          sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE USER '${MYSQL_USER}'@'${MYSQL_HOST}' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+          sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'${MYSQL_HOST}';"
+          sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "FLUSH PRIVILEGES;"
+          #chmod +x create_database_ubuntu.sh
+          #sudo ./create_database_ubuntu.sh
 
       - name: Run Test App
         env:
