@@ -24,16 +24,14 @@ jobs:
         with:
           python-version: '3.6.8'
 
-      - name: Setup all build dependencies
-        run: |
-          chmod +x update_libraries_ubuntu.sh
-          ./update_libraries_ubuntu.sh
-
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt --no-cache
 
+      - name: Check if you can login
+        run: |
+          sudo mysql -u root -proot -e "SELECT 1;"
       - name: Setup Database
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
