@@ -1,7 +1,5 @@
 # Start MySQL service
 sudo systemctl start mysqld
-
-# Enable MySQL service to start on boot
 sudo systemctl enable mysqld
 
 # Create MySQL database and user
