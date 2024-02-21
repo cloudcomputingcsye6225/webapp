@@ -26,8 +26,9 @@ jobs:
 
       - name: Setup all build dependencies
         run: |
-          chmod +x update_libraries_ubuntu.sh
-          ./update_libraries_ubuntu.sh
+          echo ""
+          #chmod +x update_libraries_ubuntu.sh
+          #./update_libraries_ubuntu.sh
 
       - name: Install dependencies
         run: |
@@ -43,12 +44,8 @@ jobs:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
         run: |
-          sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE DATABASE ${MYSQL_DATABASE};"
-          sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE USER '${MYSQL_USER}'@'${MYSQL_HOST}' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-          sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'${MYSQL_HOST}';"
-          sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "FLUSH PRIVILEGES;"
-          #chmod +x create_database_ubuntu.sh
-          #sudo ./create_database_ubuntu.sh
+          chmod +x create_database_ubuntu.sh
+          sudo ./create_database_ubuntu.sh
 
       - name: Run Test App
         env:
