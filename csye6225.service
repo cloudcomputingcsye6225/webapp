@@ -1,0 +1,15 @@
+[Unit]
+Description=Web App
+After=network.target multi-user.target
+
+[Service]
+WorkingDirectory=/home/csye6225/
+EnvironmentFile=/home/csye6225/environmentfile.env
+ExecStart=/home/csye6225/venv/bin/python3 api.py
+Restart=always
+RestartSec=3
+Type=simple
+User=root
+
+[Install]
+WantedBy=multi-user.target
