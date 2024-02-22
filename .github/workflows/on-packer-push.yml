@@ -1,0 +1,73 @@
+name: Packer Push Actions
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test-run-build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.6.8'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt --no-cache
+
+      - name: Setup Database
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+        run: |
+          sudo systemctl start mysql
+          sudo mysql -u root -proot -e "CREATE DATABASE mydb;"
+
+      - name: Run Test App
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_DATABASE: mydb
+          MYSQL_HOST: localhost
+          MYSQL_PORT: 3306
+        run: |
+          pytest
+          
+      - name: Build zipfile for transfer
+        run: |
+              zip -r webapp.zip ./*
+     
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0.4.0
+        with:
+              credentials_json: ${{ secrets.PROJECT_CREDENTIALS }}
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+              project_id: ${{ secrets.PROJECT_CREDENTIALS }}
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id:   setup
+        with:
+              version: 1.8.6
+              
+      - name: Build Custom GCP Image with Packer
+        run: |
+          packer init .
+          packer build -force -var "project_id=${{ secrets.PROJECT_ID }}" ./test.pkr.hcl
+        env:
+          GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
