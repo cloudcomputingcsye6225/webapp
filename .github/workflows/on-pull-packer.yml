@@ -31,7 +31,7 @@ jobs:
 
         - name: Dummy file for validation
           run: |
-            zip -r webapp.zip 
+            zip -r webapp.zip ./*
    
         - name: Validate packer file
           run: |
