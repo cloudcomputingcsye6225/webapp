@@ -1,0 +1,38 @@
+name: Packer Validation Test
+on:
+  pull_request:
+    branches:
+      - main
+      - assignment_*
+
+jobs:
+  test-packer-run:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+       
+        - name: Setup Packer
+          uses: hashicorp/setup-packer@main
+          id: setup
+          with:
+            version: "latest"
+
+        - name: Check Packer version
+          run: packer version
+
+        - name: Packer Init
+          run: |
+            packer init test.pkr.hcl
+           
+        - name: Packer Format
+          run: |
+            packer fmt test.pkr.hcl
+
+        - name: Dummy file for validation
+          run: |
+            zip -r webapp.zip 
+   
+        - name: Validate packer file
+          run: |
+            packer validate -var "project_id=${{ secrets.PROJECT_ID }}" ./test.pkr.hcl
