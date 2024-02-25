@@ -58,7 +58,8 @@ build {
     ]
     inline = [
       "sudo /home/csye6225/update_libraries_centos.sh",
-      "sudo -E /home/csye6225/create_database_centos.sh"
+      "sudo -E /home/csye6225/create_database_centos.sh",
+      "sudo /home/csye6225/disable_selinux.sh"
     ]
   }
   provisioner "shell" {
