@@ -27,7 +27,14 @@ jobs:
            
         - name: Packer Format
           run: |
-            packer fmt test.pkr.hcl
+            output=$(packer fmt test.pkr.hcl)
+            # Check if the output is empty or not
+            if [ -z "$output" ]; then
+              echo "Command did not output anything."
+            else
+              echo "Command outputted something: $output"
+              exit 1
+            fi
 
         - name: Dummy file for validation
           run: |
