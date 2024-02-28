@@ -49,29 +49,13 @@ build {
     ]
   }
   provisioner "shell" {
-    environment_vars = [
-      "MYSQL_USER=advaith",
-      "MYSQL_PASSWORD=helloworld",
-      "MYSQL_DATABASE=mydb",
-      "MYSQL_HOST=localhost",
-      "MYSQL_PORT=3306"
-    ]
     inline = [
       "sudo /home/csye6225/update_libraries_centos.sh",
-      "sudo -E /home/csye6225/create_database_centos.sh",
       "sudo /home/csye6225/disable_selinux.sh"
     ]
   }
   provisioner "shell" {
-    environment_vars = [
-      "MYSQL_USER=advaith",
-      "MYSQL_PASSWORD=helloworld",
-      "MYSQL_DATABASE=mydb",
-      "MYSQL_HOST=localhost",
-      "MYSQL_PORT=3306"
-    ]
     inline = [
-
       "sudo cp /home/csye6225/csye6225.service /etc/systemd/system/",
       "sudo chown root:root /etc/systemd/system/csye6225.service",
       "sudo chmod 744 /etc/systemd/system/csye6225.service",
@@ -80,8 +64,7 @@ build {
       "sudo systemctl daemon-reload",
       "sudo systemctl start csye6225",
       "sudo systemctl enable csye6225",
-      "sudo systemctl status csye6225",
-      "journalctl -xe"
+      "sudo systemctl status csye6225"
     ]
   }
 
