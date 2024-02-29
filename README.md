@@ -8,7 +8,7 @@ This is a web application built with Python using the Flask framework. It provid
 
 ### Prerequisites
 
-- Python 3.x installed on your system
+- Python 3.6.8 installed on your system
 - MySQL database server running locally or accessible via network
 - Git installed on your system
 
