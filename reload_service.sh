@@ -12,9 +12,3 @@ echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" | sudo tee -a /home/csye6225/env
 echo "MYSQL_DATABASE=$MYSQL_DATABASE" | sudo tee -a /home/csye6225/environmentfile.env > /dev/null
 echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" | sudo tee -a /home/csye6225/environmentfile.env > /dev/null
 echo "MYSQL_PORT=$MYSQL_PORT" | sudo tee -a /home/csye6225/environmentfile.env > /dev/null
-
-
-sudo systemctl stop csye6225 >> /home/csye6225/log.txt
-sudo systemctl daemon-reload >> /home/csye6225/log.txt
-sudo systemctl reenable csye6225 >> /home/csye6225/log.txt
-sudo systemctl start csye6225 >> /home/csye6225/log.txt
