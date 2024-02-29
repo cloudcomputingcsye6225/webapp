@@ -45,7 +45,7 @@ build {
       "sudo chown csye6225:csye6225 /home/packer/webapp.zip",
       "sudo mv /home/packer/webapp.zip /home/csye6225/",
       "sudo yum install -y unzip",
-      "sudo -u csye6225 bash -c 'cd /home/csye6225/ && unzip webapp.zip && rm webapp.zip && chmod +x *.sh'"
+      "sudo -u csye6225 bash -c 'cd /home/csye6225/ && unzip webapp.zip && rm webapp.zip && chmod +x *.sh && touch reload_flag'"
     ]
   }
   provisioner "shell" {
