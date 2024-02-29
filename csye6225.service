@@ -5,9 +5,10 @@ After=network.target multi-user.target
 [Service]
 WorkingDirectory=/home/csye6225/
 EnvironmentFile=/home/csye6225/environmentfile.env
+ExecStartPre=/bin/bash -c 'if [ -f "/home/csye6225/reload_flag" ]; then exit 0; else exit 1; fi'
 ExecStart=/home/csye6225/venv/bin/python3 api.py
 Restart=always
-RestartSec=3
+RestartSec=10
 Type=simple
 User=root
 
