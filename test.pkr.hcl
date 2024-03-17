@@ -51,7 +51,10 @@ build {
   provisioner "shell" {
     inline = [
       "sudo /home/csye6225/update_libraries_centos.sh",
-      "sudo /home/csye6225/disable_selinux.sh"
+      "sudo /home/csye6225/disable_selinux.sh",
+      "curl -sSO https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh",
+      "sudo bash add-monitoring-agent-repo.sh",
+      "sudo yum install -y stackdriver-agent"
     ]
   }
   provisioner "shell" {
