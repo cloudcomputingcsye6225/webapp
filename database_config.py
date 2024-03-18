@@ -25,7 +25,7 @@ structlog.configure(
 logger = structlog.get_logger()
 
 log_dir = '/var/log/csye6225/'
-log_filename = logdir + 'my_log_file.json'
+log_filename = log_dir + 'my_log_file.json'
 
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
