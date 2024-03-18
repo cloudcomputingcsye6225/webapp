@@ -42,7 +42,7 @@ jobs:
           sudo mysql -u root -proot -e "CREATE DATABASE mydb;"
           sudo mkdir /var/log/csye6225/
           USER=$(whoami)
-          sudo chown -R USER /var/log/csye6225/
+          sudo chown -R $USER /var/log/csye6225/
 
       - name: Run Test App
         env:
