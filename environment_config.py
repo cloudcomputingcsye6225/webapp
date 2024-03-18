@@ -1,8 +1,11 @@
 from flask import Flask, make_response, jsonify
-from database_config import Session
+from database_config import Session, logger, log_filename
 from models import User
 
 app = Flask(__name__)
+app.logger.disabled = True
+app.logger.addHandler(logging.FileHandler(log_filename))
+
 
 http_methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT']
 
