@@ -1,6 +1,7 @@
 from flask import Flask, make_response, jsonify
 from database_config import Session, logger, log_filename
 from models import User
+import logging
 
 app = Flask(__name__)
 app.logger.disabled = True
