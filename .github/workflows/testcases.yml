@@ -24,12 +24,6 @@ jobs:
         with:
           python-version: '3.6.8'
 
-      - name: Setup all build dependencies
-        run: |
-          echo ""
-          #chmod +x update_libraries_ubuntu.sh
-          #./update_libraries_ubuntu.sh
-
       - name: Install dependencies
         run: |
           pip install --upgrade pip
@@ -46,8 +40,9 @@ jobs:
         run: |
           sudo systemctl start mysql
           sudo mysql -u root -proot -e "CREATE DATABASE mydb;"
-          #chmod +x create_database_ubuntu.sh
-          #sudo ./create_database_ubuntu.sh
+          sudo mkdir /var/log/csye6225/
+          USER=$(whoami)
+          sudo chown -R USER /var/log/csye6225/
 
       - name: Run Test App
         env:
