@@ -24,7 +24,7 @@ source "googlecompute" "google-custom-image" {
   source_image_family = "centos-stream-8"
   image_name          = "custom-image"
   image_family        = "custom-image-family"
-  zone                = "us-central1-a"
+  zone                = "us-west1-a"
   ssh_username        = "packer"
   use_internal_ip     = false
   credentials_file    = var.credentials_file
