@@ -2,11 +2,16 @@ from flask import Flask, make_response, jsonify
 from database_config import Session, logger, log_filename
 from models import User
 import logging
+import flask
+
+flask.cli.load_dotenv()
+flask.logging.default_handler.disabled = True
 
 app = Flask(__name__)
+werk_log = logging.getLogger('werkzeug')
+werk_log.disabled = True
+app.logger = logger
 app.logger.disabled = True
-app.logger.addHandler(logging.FileHandler(log_filename))
-
 
 http_methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT']
 
@@ -52,18 +57,22 @@ with app.app_context():
     response_204.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response_204.headers["Content-Length"] = "0"
     response_204.headers["Content-Type"] = "application/json"
-    
+
+logger.info("Created response templates")
+
 def send_json_with_data(data):
     with app.app_context():
       response = jsonify(data)
       response.headers["Pragma"] = "no-cache"
       response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+      logger.info("Sent info")
       return response
       
 def authenticate_user(request_object):
     with app.app_context():    
       if 'basic' in request_object.headers.get('Authorization').lower():
           if not request_object.authorization:
+              logger.info("Bad auth type")
               return None
 
           auth = request_object.authorization
@@ -77,12 +86,15 @@ def authenticate_user(request_object):
               
               if user:
                   if user.verify_password(auth['password']):
+                      logger.info("User auth successful!")
                       return user
                   else:
+                      logger.info("Invalid User!")
                       return None
               else:
                   return None
       else:
+          logger.info("User auth type was not basic")
           return None
 
 

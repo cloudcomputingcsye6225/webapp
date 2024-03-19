@@ -7,6 +7,18 @@ import structlog
 import logging
 import json
 
+log_dir = '/var/log/csye6225/'
+log_filename = log_dir + 'my_log_file.log'
+
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+if not os.path.exists(log_filename):
+    try:
+        open(log_filename, 'a').close()
+    except Exception as e:
+        print(f"Error occurred while creating the log file: {e}")
+
 structlog.configure(
     processors=[
         structlog.stdlib.add_log_level,
@@ -19,27 +31,19 @@ structlog.configure(
     context_class=dict,
     logger_factory=structlog.stdlib.LoggerFactory(),
     wrapper_class=structlog.stdlib.BoundLogger,
-    cache_logger_on_first_use=True,
+    cache_logger_on_first_use=True
 )
 
+logging.basicConfig(
+    format="%(message)s",  # You can change the format as needed
+    level=logging.INFO,    # Set the logging level
+    filename=log_filename,  # Set the filename
+)
+
+def log_to_file(logger, level, event_dict):
+    logger.log(level, event_dict)
+
 logger = structlog.get_logger()
-
-log_dir = '/var/log/csye6225/'
-log_filename = log_dir + 'my_log_file.json'
-
-if not os.path.exists(log_dir):
-    os.makedirs(log_dir)
-
-if not os.path.exists(log_filename):
-    try:
-        # Create the log file if it doesn't exist
-        open(log_filename, 'a').close()
-    except Exception as e:
-        print(f"Error occurred while creating the log file: {e}")
-file_handler = logging.FileHandler(log_filename)
-file_handler.setFormatter(logging.Formatter('%(message)s'))
-
-logging.root.addHandler(file_handler)
 
 try:
     user_name = os.environ['MYSQL_USER']
