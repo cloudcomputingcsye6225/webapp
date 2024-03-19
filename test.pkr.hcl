@@ -54,7 +54,7 @@ build {
       "sudo /home/csye6225/disable_selinux.sh",
       "curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh",
       "sudo bash add-google-cloud-ops-agent-repo.sh --also-install",
-      "sudo mv /home/csye6225/config.yaml /etc/google-cloud-ops-agent/config.yaml"
+      "sudo mv /home/csye6225/config.yaml /etc/google-cloud-ops-agent/config.yaml",
       "sudo chown root:root /etc/google-cloud-ops-agent/config.yaml"
     ]
   }
@@ -66,7 +66,7 @@ build {
       "sudo -u csye6225 bash -c 'cd /home/csye6225/ && python3 -m venv venv && source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir'",
       "sudo setenforce 0",
       "sudo systemctl daemon-reload",
-      "sudo systemctl restart google-cloud-ops-agent*"
+      "sudo systemctl restart google-cloud-ops-agent*",
       "sudo systemctl start csye6225",
       "sudo systemctl enable csye6225",
       "sudo systemctl status csye6225",
