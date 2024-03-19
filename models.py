@@ -2,7 +2,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
 import uuid
 from datetime import datetime
-from database_config import Session
+from database_config import Session, logger
 from utilities import hash_password, verify
 
 base = declarative_base()
@@ -23,20 +23,24 @@ class User(base):
             session = Session()
             user = session.query(User).filter(User.username == username).first()
             session.close()
-            
+            logger.info("Checking if username exists")
             if user:
+              logger.info("User exists")
               return True
             else:
+              logger.warn("User doesnt exist")
               return False
         
         def check_if_username_exists(self, username):
             session = Session()
             user = session.query(User).filter(User.username != self.username, User.username == username).first()
             session.close()
-            
+            logger.info("Checking if username exists")
             if user:
+              logger.info("User exists")
               return True
             else:
+              logger.warn("User doesnt exist")
               return False
               
         def update_user(self, user_data):
@@ -44,6 +48,7 @@ class User(base):
             flag = True
             user = session.query(User).filter(User.username == self.username).first()
             try:
+                logger.info("Updating user info")
                 user.username = user_data['username']
                 user.password = hash_password(user_data['password'])
                 user.first_name = user_data['first_name']
@@ -51,7 +56,9 @@ class User(base):
                 user.account_updated = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                 
                 session.commit()
+                logger.info("User info updated")
             except Exception as e:
+                logger.error("User update failed")
                 session.rollback()
                 flag = False
             
@@ -75,10 +82,11 @@ class User(base):
             data['password'] = hash_password(data['password'])
             
             user = User(username = data['username'], first_name = data['first_name'], last_name = data['last_name'], password = data['password'], account_created = data['account_created'], account_updated = data['account_updated'], id = data['id'])
-            
+            logger.info("Adding new user")
             session.add(user)
             session.commit()
             session.close()
+            logger.info("Added new user")
         
         def verify_password(self, password):
             return verify(self.password, password)
