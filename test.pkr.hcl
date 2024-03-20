@@ -70,7 +70,8 @@ build {
       "sudo systemctl start csye6225",
       "sudo systemctl enable csye6225",
       "sudo systemctl status csye6225",
-      "sudo rm /home/csye6225/reload_flag"
+      "sudo rm /home/csye6225/reload_flag",
+      "sudo yum erase mysql-server"
     ]
   }
 
