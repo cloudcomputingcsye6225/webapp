@@ -71,7 +71,7 @@ build {
       "sudo systemctl enable csye6225",
       "sudo systemctl status csye6225",
       "sudo rm /home/csye6225/reload_flag",
-      "sudo yum erase mysql-server"
+      "sudo yum erase -y mysql-server"
     ]
   }
 
