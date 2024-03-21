@@ -23,24 +23,24 @@ class User(base):
             session = Session()
             user = session.query(User).filter(User.username == username).first()
             session.close()
-            logger.info("Checking if username exists")
+            logger.info("Checking if username exists", severity = "INFO")
             if user:
-              logger.info("User exists")
+              logger.info("User exists", severity = "INFO")
               return True
             else:
-              logger.warn("User doesnt exist")
+              logger.warn("User doesnt exist", severity = "WARN")
               return False
         
         def check_if_username_exists(self, username):
             session = Session()
             user = session.query(User).filter(User.username != self.username, User.username == username).first()
             session.close()
-            logger.info("Checking if username exists")
+            logger.info("Checking if username exists", severity = "INFO")
             if user:
-              logger.info("User exists")
+              logger.info("User exists", severity = "INFO")
               return True
             else:
-              logger.warn("User doesnt exist")
+              logger.warn("User doesnt exist", severity = "WARN")
               return False
               
         def update_user(self, user_data):
@@ -48,7 +48,7 @@ class User(base):
             flag = True
             user = session.query(User).filter(User.username == self.username).first()
             try:
-                logger.info("Updating user info")
+                logger.info("Updating user info", severity = "INFO")
                 user.username = user_data['username']
                 user.password = hash_password(user_data['password'])
                 user.first_name = user_data['first_name']
@@ -56,9 +56,9 @@ class User(base):
                 user.account_updated = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                 
                 session.commit()
-                logger.info("User info updated")
+                logger.info("User info updated", severity = "INFO")
             except Exception as e:
-                logger.error("User update failed")
+                logger.error("User update failed", severity = "ERROR")
                 session.rollback()
                 flag = False
             
@@ -82,11 +82,11 @@ class User(base):
             data['password'] = hash_password(data['password'])
             
             user = User(username = data['username'], first_name = data['first_name'], last_name = data['last_name'], password = data['password'], account_created = data['account_created'], account_updated = data['account_updated'], id = data['id'])
-            logger.info("Adding new user")
+            logger.info("Adding new user", severity = "INFO")
             session.add(user)
             session.commit()
             session.close()
-            logger.info("Added new user")
+            logger.info("Added new user", severity = "INFO")
         
         def verify_password(self, password):
             return verify(self.password, password)
