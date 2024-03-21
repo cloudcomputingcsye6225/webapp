@@ -8,7 +8,7 @@ import logging
 import json
 
 log_dir = '/var/log/csye6225/'
-log_filename = log_dir + 'my_log_file.log'
+log_filename = log_dir + 'my_log_file.json'
 
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
