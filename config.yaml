@@ -22,7 +22,7 @@ logging:
       type: files
       record_log_file_path: true
       include_paths:
-        - /var/log/csye6225/my_log_file.json
+        - /var/log/csye6225/*.json
   processors:
     parse_json_proc:
       type: parse_json
