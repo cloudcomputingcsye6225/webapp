@@ -52,7 +52,7 @@ try:
     port = os.environ['MYSQL_PORT']
     db_name = os.environ['MYSQL_DATABASE']
 except KeyError as e:
-    logger.error("Failed to retrieve environment variable", variable=str(e))
+    logger.error("Failed to retrieve environment variable", severity = "ERROR")
     raise
 
 
@@ -61,9 +61,9 @@ def reconnect():
         connection_string = f"mysql://{user_name}:{password}@{db_url}:{port}/{db_name}"
         engine = create_engine(connection_string)
         Session = sessionmaker(bind = engine)
-        logger.info("Connected to database")
+        logger.info("Connected to database", severity = "INFO")
         return engine, Session
     except OperationalError as e:
-         logger.error("Failed to connect to database", error=str(e))
+         logger.error("Failed to connect to database", severity = "ERROR")
 engine, Session = reconnect()
 
