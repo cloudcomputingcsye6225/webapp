@@ -58,21 +58,21 @@ with app.app_context():
     response_204.headers["Content-Length"] = "0"
     response_204.headers["Content-Type"] = "application/json"
 
-logger.info("Created response templates")
+logger.info("Created response templates", severity = "INFO")
 
 def send_json_with_data(data):
     with app.app_context():
       response = jsonify(data)
       response.headers["Pragma"] = "no-cache"
       response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-      logger.info("Sent info")
+      logger.info("Sent info", severity = "INFO")
       return response
       
 def authenticate_user(request_object):
     with app.app_context():    
       if 'basic' in request_object.headers.get('Authorization').lower():
           if not request_object.authorization:
-              logger.info("Bad auth type")
+              logger.info("Bad auth type", severity = "INFO")
               return None
 
           auth = request_object.authorization
@@ -86,15 +86,15 @@ def authenticate_user(request_object):
               
               if user:
                   if user.verify_password(auth['password']):
-                      logger.info("User auth successful!")
+                      logger.info("User auth successful!", severity = "INFO")
                       return user
                   else:
-                      logger.info("Invalid User!")
+                      logger.info("Invalid User!", severity = "INFO")
                       return None
               else:
                   return None
       else:
-          logger.info("User auth type was not basic")
+          logger.info("User auth type was not basic", severity = "INFO")
           return None
 
 
