@@ -17,6 +17,7 @@ class User(base):
         password = Column(String(100))
         account_created = Column(DateTime, default=datetime.utcnow)
         account_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        is_confirmed = Column(Boolean, default=False)
         
         @staticmethod
         def global_check_if_username_exists(username):
