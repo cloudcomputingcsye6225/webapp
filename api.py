@@ -7,13 +7,14 @@ import logging
 from datetime import datetime
 
 from utilities import hash_password, verify
-from database_config import engine, Session, reconnect, logger
+from database_config import engine, Session, reconnect, logger, domain
 from models import User, base
-from environment_config import app, http_methods, send_json_with_data, authenticate_user
+from environment_config import app, http_methods, send_json_with_data, authenticate_user, topic_path, publisher
 from environment_config import response_400, response_503, response_405, response_200_0, response_404, response_401, response_204
 
 try:
     logger.info("Creating all tables", severity = "INFO")
+    base.metadata.drop_all(engine)
     base.metadata.create_all(engine)
     session = Session()
     session.query(User).first()
@@ -70,13 +71,16 @@ def create_user():
                 if len(data['password']) < 1:
                     logger.error("Invalid password", severity = "ERROR", ip_addr = request.remote_addr)
                     raise ValueError
-                User.create_new_user(data)
-                
+                profile = User.create_new_user(data)
+
+                message = json.dumps(profile).encode('utf-8')
+                publisher.publish(topic_path, message)
+
                 del data['password'] 
                 logger.info("User successfully created!", severity = "INFO", ip_addr = request.remote_addr)
-                return response_200_0, 201
+                return send_json_with_data(profile), 201
         except Exception as e:
-                logger.error("Invalid body or args detected", severity = "ERROR", ip_addr = request.remote_addr)
+                logger.error("Invalid body or args detected " + str(e), severity = "ERROR", ip_addr = request.remote_addr)
                 return response_400
 
 @app.route('/v1/user/self', methods = http_methods)
@@ -161,6 +165,22 @@ def get_or_put_user():
 
         else:
             return response_405
+
+@app.route('/verify/<verification_link>', methods = http_methods)
+def verify_username(verification_link):
+    logger.info("Started Verification for " + verification_link, severity = "INFO", ip_addr = request.remote_addr)
+    if request.method != 'GET':
+        logger.error("Invalid Method, please try with right method", severity = "ERROR", ip_addr = request.remote_addr)
+        return response_405
+    if request.args or request.get_data(as_text = True):
+        logger.error("Invalid body or args detected", severity = "ERROR", ip_addr = request.remote_addr)
+        return response_400
+    
+    if(User.verify_user(verification_link)):
+        return response_200_0
+    else:
+        return response_400
+
 @app.route('/<path:path>', methods = http_methods)
 def catch_other_routes(path):
         logger.error("Bad endpoint", severity = "ERROR", ip_addr = request.remote_addr)
