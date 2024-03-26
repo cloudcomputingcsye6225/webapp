@@ -71,6 +71,11 @@ def test_create_user(client):
     response = client.post('/v1/user', json=user_data)
     assert response.status_code == 201
 
+    user_id = response.json['id']
+
+    response = client.get(f'/verify/{user_id}')
+    assert response.status_code == 200
+
 def test_get_user_profile(client):
     response = client.get('/v1/user/self', headers={'Authorization': f'Basic {auth_encoded}'})
     assert response.status_code == 200

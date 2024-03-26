@@ -1,5 +1,6 @@
 from flask import Flask, make_response, jsonify
-from database_config import Session, logger, log_filename
+from database_config import Session, logger, log_filename, topic, domain, project_name
+from google.cloud import pubsub_v1
 from models import User
 import logging
 import flask
@@ -12,6 +13,9 @@ werk_log = logging.getLogger('werkzeug')
 werk_log.disabled = True
 app.logger = logger
 app.logger.disabled = True
+
+publisher = pubsub_v1.PublisherClient()
+topic_path = publisher.topic_path(project_name, topic)
 
 http_methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT']
 
@@ -86,10 +90,14 @@ def authenticate_user(request_object):
               
               if user:
                   if user.verify_password(auth['password']):
-                      logger.info("User auth successful!", severity = "INFO")
-                      return user
+                      if user.if_verified():
+                        logger.info("User auth successful!", severity = "INFO")
+                        return user
+                      else:
+                        logger.warn("Invalid User!", severity = "INFO")
+                        return None
                   else:
-                      logger.info("Invalid User!", severity = "INFO")
+                      logger.warn("Invalid User!", severity = "INFO")
                       return None
               else:
                   return None
