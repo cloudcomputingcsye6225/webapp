@@ -46,6 +46,15 @@ jobs:
           sudo mkdir /var/log/csye6225/
           USER=$(whoami)
           sudo chown -R $USER /var/log/csye6225/
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0.4.0
+        with:
+              credentials_json: ${{ secrets.PROJECT_CREDENTIALS }}
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+              project_id: ${{ secrets.PROJECT_ID }}
 
       - name: Run Test App
         env:
