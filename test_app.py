@@ -1,6 +1,6 @@
 import pytest
 from time import sleep
-from api import app
+from api_test import app
 from utilities import generate_random_string
 import base64
 
