@@ -29,28 +29,15 @@ jobs:
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_TOPIC: ${{ secrets.GCP_TOPIC }}
+          GCP_SUBSCRIBER: ${{ secrets.GCP_SUBSCRIBER }}
         run: |
           sudo systemctl start mysql
           sudo mysql -u root -proot -e "CREATE DATABASE mydb;"
           sudo mkdir /var/log/csye6225/
           USER=$(whoami)
           sudo chown -R $USER /var/log/csye6225/
-
-      - name: Run Test App
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: root
-          MYSQL_PASSWORD: root
-          MYSQL_DATABASE: mydb
-          MYSQL_HOST: localhost
-          MYSQL_PORT: 3306
-        run: |
-          pytest
-          
-      - name: Build zipfile for transfer
-        run: |
-              zip -r webapp.zip ./*
-     
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v0.4.0
         with:
@@ -60,6 +47,24 @@ jobs:
         uses: google-github-actions/setup-gcloud@v0.2.0
         with:
               project_id: ${{ secrets.PROJECT_ID }}
+
+      - name: Run Test App
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_DATABASE: mydb
+          MYSQL_HOST: localhost
+          MYSQL_PORT: 3306
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_TOPIC: ${{ secrets.GCP_TOPIC }}
+          GCP_SUBSCRIBER: ${{ secrets.GCP_SUBSCRIBER }}
+        run: |
+          pytest
+          
+      - name: Build zipfile for transfer
+        run: |
+              zip -r webapp.zip ./*
 
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
