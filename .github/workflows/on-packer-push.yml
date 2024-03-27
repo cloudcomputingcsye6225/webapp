@@ -33,7 +33,7 @@ jobs:
           GCP_TOPIC: ${{ secrets.GCP_TOPIC }}
         run: |
           sudo systemctl start mysql
-          sudo -E mysql -u $MYSQL_USER -p'$MYSQL_PASSWORD' -e "CREATE DATABASE $MYSQL_DATABASE;"
+          sudo -E mysql -u $MYSQL_USER -p"$MYSQL_PASSWORD" -e "CREATE DATABASE $MYSQL_DATABASE;"
           sudo mkdir /var/log/csye6225/
           USER=$(whoami)
           sudo chown -R $USER /var/log/csye6225/
