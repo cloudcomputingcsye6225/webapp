@@ -7,7 +7,6 @@ MYSQL_PASSWORD=$(sudo curl -s -H "Metadata-Flavor: Google" http://metadata.googl
 MYSQL_PORT=$(sudo curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/attributes/MYSQL_PORT)
 GCP_PROJECT_ID=$(sudo curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/attributes/GCP_PROJECT_ID)
 GCP_TOPIC=$(sudo curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/attributes/GCP_TOPIC)
-GCP_SUBSCRIBER=$(sudo curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/attributes/GCP_SUBSCRIBER)
 
 echo "MYSQL_HOST=$MYSQL_HOST" | sudo tee /home/csye6225/environmentfile.env > /dev/null
 echo "MYSQL_USER=$MYSQL_USER" | sudo tee -a /home/csye6225/environmentfile.env > /dev/null
@@ -17,4 +16,3 @@ echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" | sudo tee -a /home/csye6225/environmentfi
 echo "MYSQL_PORT=$MYSQL_PORT" | sudo tee -a /home/csye6225/environmentfile.env > /dev/null
 echo "GCP_PROJECT_ID=$GCP_PROJECT_ID" | sudo tee -a /home/csye6225/environmentfile.env > /dev/null
 echo "GCP_TOPIC=$GCP_TOPIC" | sudo tee -a /home/csye6225/environmentfile.env > /dev/null
-echo "GCP_SUBSCRIBER=$GCP_SUBSCRIBER" | sudo tee -a /home/csye6225/environmentfile.env > /dev/null
