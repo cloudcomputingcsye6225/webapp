@@ -54,7 +54,6 @@ try:
     token_ttl = 120
     project_name = os.environ['GCP_PROJECT_ID']
     topic = os.environ['GCP_TOPIC']
-    subscriber = os.environ['GCP_SUBSCRIBER']
     domain = "http://generalming.me/"
 except KeyError as e:
     logger.error("Failed to retrieve environment variable", severity = "ERROR")
