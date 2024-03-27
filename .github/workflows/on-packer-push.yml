@@ -31,7 +31,6 @@ jobs:
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           GCP_TOPIC: ${{ secrets.GCP_TOPIC }}
-          GCP_SUBSCRIBER: ${{ secrets.GCP_SUBSCRIBER }}
         run: |
           sudo systemctl start mysql
           sudo mysql -u root -proot -e "CREATE DATABASE mydb;"
@@ -58,7 +57,6 @@ jobs:
           MYSQL_PORT: 3306
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           GCP_TOPIC: ${{ secrets.GCP_TOPIC }}
-          GCP_SUBSCRIBER: ${{ secrets.GCP_SUBSCRIBER }}
         run: |
           pytest
           
