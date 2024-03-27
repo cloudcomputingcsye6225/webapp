@@ -41,7 +41,7 @@ jobs:
           GCP_TOPIC: ${{ secrets.GCP_TOPIC }}
         run: |
           sudo systemctl start mysql
-          sudo mysql -u root -proot -e "CREATE DATABASE mydb;"
+          sudo -E mysql -u $MYSQL_USER -p'$MYSQL_PASSWORD' -e "CREATE DATABASE $MYSQL_DATABASE;"
           sudo mkdir /var/log/csye6225/
           USER=$(whoami)
           sudo chown -R $USER /var/log/csye6225/
@@ -55,14 +55,14 @@ jobs:
         with:
               project_id: ${{ secrets.PROJECT_ID }}
 
-      - name: Run Test App
+      - name: Run App
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: root
-          MYSQL_PASSWORD: root
-          MYSQL_DATABASE: mydb
-          MYSQL_HOST: localhost
-          MYSQL_PORT: 3306
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           GCP_TOPIC: ${{ secrets.GCP_TOPIC }}
         run: |
