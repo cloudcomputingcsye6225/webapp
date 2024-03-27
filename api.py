@@ -14,7 +14,6 @@ from environment_config import response_400, response_503, response_405, respons
 
 try:
     logger.info("Creating all tables", severity = "INFO")
-    base.metadata.drop_all(engine)
     base.metadata.create_all(engine)
     session = Session()
     session.query(User).first()
