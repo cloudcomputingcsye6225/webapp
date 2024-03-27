@@ -51,7 +51,7 @@ try:
     db_url = os.environ['MYSQL_HOST']
     port = os.environ['MYSQL_PORT']
     db_name = os.environ['MYSQL_DATABASE']
-    token_ttl = 60
+    token_ttl = 120
     project_name = os.environ['GCP_PROJECT_ID']
     topic = os.environ['GCP_TOPIC']
     subscriber = os.environ['GCP_SUBSCRIBER']
