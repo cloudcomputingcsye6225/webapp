@@ -10,7 +10,7 @@ from utilities import hash_password, verify
 from database_config import engine, Session, reconnect, logger, domain
 from models import User, base
 from environment_config import app, http_methods, send_json_with_data, authenticate_user, topic_path, publisher
-from environment_config import response_400, response_503, response_405, response_200_0, response_404, response_401, response_204
+from environment_config import response_400, response_503, response_405, response_200_0, response_404, response_401, response_204, response_403
 
 try:
     logger.info("Creating all tables", severity = "INFO")
@@ -103,6 +103,9 @@ def get_or_put_user():
                 if not user:
                     logger.error("Unauthorized", severity = "ERROR", ip_addr = request.remote_addr)
                     return response_401
+                elif user == "403":
+                    logger.error("Forbidden", severity = "ERROR", ip_addr = request.remote_addr)
+                    return response_403
                 else:
                     user_profile = {
                                 'id': user.id,
