@@ -62,6 +62,12 @@ with app.app_context():
     response_204.headers["Content-Length"] = "0"
     response_204.headers["Content-Type"] = "application/json"
 
+    response_403 = make_response('', 403)
+    response_403.headers["Pragma"] = "no-cache"
+    response_403.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response_403.headers["Content-Length"] = "0"
+    response_403.headers["Content-Type"] = "application/json"
+
 logger.info("Created response templates", severity = "INFO")
 
 def send_json_with_data(data):
@@ -95,7 +101,7 @@ def authenticate_user(request_object):
                         return user
                       else:
                         logger.warn("Invalid User!", severity = "INFO")
-                        return None
+                        return "403"
                   else:
                       logger.warn("Invalid User!", severity = "INFO")
                       return None
