@@ -73,13 +73,7 @@ jobs:
       - name: Build Custom GCP Image with Packer
         run: |
           packer init .
-          packer build -force -var "project_id=${{ secrets.PROJECT_ID }}" ./test.pkr.hcl > packer-build-output.json
-          image_id=$(jq -r '.builds[-1].artifact_id' < packer-build-output.json)
-          echo "::set-output name=image_id::$image_id"
-          echo "IMAGE_ID=${{ steps.packer_build.outputs.image_id }}" >> $GITHUB_ENV
+          packer build -force -var "project_id=${{ secrets.PROJECT_ID }}" ./test.pkr.hcl
         env:
           GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
           GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
-      #- name: Create New Instance Template Version
-      #  run: |
-      #    gcloud compute instance-templates create web-instance-template --machine-type=e2-standard-4 --image-family=debian-9 --image-project=debian-cloud --boot-disk-size=250GB
