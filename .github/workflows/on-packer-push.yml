@@ -69,16 +69,6 @@ jobs:
         id:   setup
         with:
               version: 1.8.6
-              
-      - name: Build Custom GCP Image with Packer
-        run: |
-          packer init .
-          packer build -force -machine-readable -var "project_id=${{ secrets.PROJECT_ID }}" ./test.pkr.hcl > output.txt
-          IMAGE_ID=$(grep 'artifact,0,id' output.txt | cut -d ',' -f6)
-          echo "IMAGE_ID=$IMAGE_ID" >> $GITHUB_ENV
-        env:
-          GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
 
       - name: Build Custom GCP Image with Packer
         run: |
