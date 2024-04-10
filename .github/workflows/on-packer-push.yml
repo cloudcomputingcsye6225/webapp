@@ -111,7 +111,7 @@ jobs:
 
       - name: Wait Until Update
         run: |
-          gcloud compute instance-groups managed wait-until ${{ secrets.INSTANCE_GROUP_MANAGER }} --version-target-reached
+          gcloud compute instance-groups managed wait-until ${{ secrets.INSTANCE_GROUP_MANAGER }} --version-target-reached --region=${{ secrets.GCP_REGION }}
         env:
           GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
           GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
