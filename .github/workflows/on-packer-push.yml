@@ -90,7 +90,7 @@ jobs:
             --boot-disk-size=${{ secrets.BOOT_DISK_SIZE }} \
             --boot-disk-type=${{ secrets.BOOT_DISK_TYPE }} \
             --boot-disk-auto-delete \
-            --boot-disk-device-name=${{ secrets.INSTANCE_TEMPLATE_NAME }} \
+            --boot-disk-device-name=${{ secrets.BOOT_DISK_DEVICE_NAME }} \
             --subnet=${{ secrets.SUBNET_NAME }} \
             --network=projects/$GCP_PROJECT_ID/global/networks/${{ secrets.NETWORK_NAME }} \
             --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }} \
