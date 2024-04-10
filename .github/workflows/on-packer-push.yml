@@ -73,7 +73,55 @@ jobs:
       - name: Build Custom GCP Image with Packer
         run: |
           packer init .
-          packer build -force -var "project_id=${{ secrets.PROJECT_ID }}" ./test.pkr.hcl
+          packer build -force -machine-readable -var "project_id=${{ secrets.PROJECT_ID }}" ./test.pkr.hcl > output.txt
+          IMAGE_ID=$(grep 'artifact,0,id' output.txt | cut -d ',' -f6)
+          echo "IMAGE_ID=$IMAGE_ID" >> $GITHUB_ENV
+        env:
+          GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
+
+      - name: Build Custom GCP Image with Packer
+        run: |
+          packer init .
+          packer build -force -machine-readable -var "project_id=${{ secrets.PROJECT_ID }}" ./test.pkr.hcl > output.txt
+          IMAGE_ID=$(grep 'artifact,0,id' output.txt | cut -d ',' -f6)
+          echo "IMAGE_ID=$IMAGE_ID" >> $GITHUB_ENV
+        env:
+          GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
+
+      - name: Create Instance Template
+        run: |
+          gcloud compute instance-templates create ${{ secrets.INSTANCE_TEMPLATE_NAME }} \
+            --machine-type=${{ secrets.MACHINE_TYPE }} \
+            --region=${{ secrets.GCP_REGION }} \
+            --image=$IMAGE_ID \
+            --image-project=$GCP_PROJECT_ID \
+            --boot-disk-size=${{ secrets.BOOT_DISK_SIZE }} \
+            --boot-disk-type=${{ secrets.BOOT_DISK_TYPE }} \
+            --boot-disk-auto-delete \
+            --boot-disk-device-name=${{ secrets.INSTANCE_TEMPLATE_NAME }} \
+            --subnet=${{ secrets.SUBNET_NAME }} \
+            --network=projects/$GCP_PROJECT_ID/global/networks/${{ secrets.NETWORK_NAME }} \
+            --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }} \
+            --scopes=https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/compute.readonly,https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/pubsub \
+            --metadata="MYSQL_HOST=${{ secrets.CLOUDSQL_HOST }},MYSQL_USER=${{ secrets.CLOUDSQL_USER }},MYSQL_PASSWORD=${{ secrets.CLOUDSQL_PASSWORD }},MYSQL_DATABASE=${{ secrets.CLOUDSQL_DATABASE }},MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }},MYSQL_PORT=${{ secrets.MYSQL_PORT }},GCP_PROJECT_ID=$GCP_PROJECT_ID,GCP_TOPIC=${{ secrets.GCP_TOPIC }},startup-script=/home/csye6225/reload_service.sh && touch /home/csye6225/reload_flag" \
+            --instance-template-region=${{ secrets.GCP_REGION }} \
+            --boot-disk-kms-key=${{ secrets.KMS_KEY_ID }}
+        env:
+          GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
+
+      - name: Start Rolling Update
+        run: |
+          gcloud compute instance-groups managed rolling-action start-update ${{ secrets.INSTANCE_GROUP_MANAGER }} --region=${{ secrets.GCP_REGION }} --version=template=projects/$GCP_PROJECT_ID/regions/${{ secrets.GCP_REGION }}/instanceTemplates/${{ secrets.INSTANCE_TEMPLATE_NAME }}
+        env:
+          GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
+
+      - name: Wait Until Update
+        run: |
+          gcloud compute instance-groups managed wait-until ${{ secrets.INSTANCE_GROUP_MANAGER }} --version-target-reached
         env:
           GCP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
           GCP_SA_KEY: ${{ secrets.PROJECT_CREDENTIALS }}
