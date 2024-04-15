@@ -68,7 +68,7 @@ def test_create_user(client):
         "username": username,
         "password": password
     }
-    response = client.post('/v4/user', json=user_data)
+    response = client.post('/v2/user', json=user_data)
     assert response.status_code == 201
 
     user_id = response.json['id']
