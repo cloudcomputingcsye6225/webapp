@@ -44,7 +44,7 @@ def health_check():
                 logger.error("Database is down!", severity = "ERROR", ip_addr = request.remote_addr)
                 return response_503
 
-@app.route('/v1/user', methods = http_methods)
+@app.route('/v4/user', methods = http_methods)
 def create_user():
         logger.info("Started Create User", severity = "INFO", ip_addr = request.remote_addr)
         if request.method != 'POST':
